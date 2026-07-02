@@ -91,7 +91,7 @@ The system processes speech input through a web interface, uses a fine-tuned Wav
 
 > This shows how all components interact in the system.
 
-![System Architecture](docs/system_architecture.png)
+<img src="docs/system_architecture.png" width="650"/>
 
 ## 📡 IoT Device Architecture
 
@@ -136,21 +136,9 @@ Word Error Rate (WER) is used to evaluate the performance of the speech recognit
 
 A lower WER indicates better speech recognition performance, especially important for dysarthric speech where pronunciation can vary significantly.
 
-![WER Graph](docs/wer_graph.png)
-
-### Accuracy
-
-The accuracy graph shows the model’s performance improvement during training. It reflects how well the model learns to classify speech commands over time.
-
-![Accuracy Graph](docs/accuracy_graph.png)
+![WER Graph](docs/training_1.png)
 
 ---
-
-### Loss
-
-The loss graph represents the training loss reduction over epochs. A decreasing loss indicates that the model is learning effectively.
-
-![Loss Graph](docs/loss_graph.png)
 
 ## 📂 Project Structure
 
