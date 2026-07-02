@@ -108,7 +108,8 @@ Once the AI model predicts and the user confirms a command, the Flask backend se
 
 ### IoT Architecture Diagram
 
-![IoT Architecture](docs/iot_architecture.png)
+<img src="docs/iot_architecture.png" width="650"/>
+
 
 ## 📱 Web Interface
 
@@ -128,7 +129,8 @@ The SpeakEasy model was evaluated using classification and speech recognition me
 
 The confusion matrix shows the model’s performance in distinguishing between different voice commands and highlights classification accuracy across all categories.
 
-![Confusion Matrix](docs/confusion_matrix.png)
+<img src="docs/confusion_matrix.png" width="450"/>
+
 
 ### Word Error Rate (WER)
 
@@ -136,10 +138,9 @@ Word Error Rate (WER) is used to evaluate the performance of the speech recognit
 
 A lower WER indicates better speech recognition performance, especially important for dysarthric speech where pronunciation can vary significantly.
 
-![WER Graph](docs/training_1.png)
+<img src="docs/training_1.png" width="450"/>
 
 ---
-
 ## 📂 Project Structure
 
 ```text
