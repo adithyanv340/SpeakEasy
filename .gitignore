@@ -1,0 +1,42 @@
+```gitignore
+# Python virtual environments
+venv/
+.venv/
+speakeasy_env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Environment variables
+.env
+
+# Build folders
+build/
+dist/
+
+# Trained model files
+*.pt
+*.pth
+*.h5
+*.keras
+*.onnx
+*.ckpt
+
+# Dataset
+Data/
+data/
+dataset/
+
+# Archive
+_archive/
+```

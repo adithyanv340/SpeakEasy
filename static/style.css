@@ -1,0 +1,133 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #e6f2fb, #b3d9f2);
+    color: #2c3e50;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+/* container */
+.container {
+    max-width: 380px;
+    margin: auto;
+    padding: 25px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    margin-bottom: 30px;
+}
+
+/* title */
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    color: #2c3e50
+}
+
+h1::after {
+    content: "";
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: #4aa3df;
+    margin: 8px auto 0;
+    border-radius: 2px;
+}
+
+/* mic wrapper */
+.mic-wrapper {
+    display: inline-block;
+    margin: 30px 0;
+}
+
+/* mic button */
+.mic-btn {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    font-size: 36px;
+    border: none;
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);  /* soft blue */
+    color: #2c3e50;  /* darker icon for contrast */
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+}
+
+/* click feedback */
+.mic-btn:hover {
+    transform: scale(1.08);
+    background: linear-gradient(135deg, #bbdefb, #90caf9);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+
+
+/* 🔥 ACTIVE MIC EFFECT */
+.mic-active {
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(0, 255, 200, 1);
+}
+
+/* status */
+#status {
+    font-size: 16px;
+    color: #5a6c7d;
+    margin: 10px 0;
+}
+
+/* result */
+#result {
+    font-size: 20px;
+    margin: 15px 0;
+    font-weight: 500;
+}
+
+/* error */
+.error {
+    color: #ff6b6b;
+    font-size: 14px;
+}
+
+/* suggestions */
+.suggestions {
+    margin-top: 25px;
+}
+
+.suggest-title {
+    font-size: 14px;
+    color: #5a6c7d;
+    margin-bottom: 10px;
+}
+
+/* chips */
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.chip {
+    padding: 8px 14px;
+    background: rgba(108, 171, 221, 0.2);
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.chip:hover {
+    background: rgba(108, 171, 221, 0.4);
+}
+
+.logo {
+    margin-right: 8px;
+    font-size: 24px;
+    vertical-align: middle;
+}

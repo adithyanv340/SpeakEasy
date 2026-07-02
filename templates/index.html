@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SpeakEasy</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>SpeakEasy</h1>
+
+    <!-- 🎤 MIC -->
+    <div id="micContainer" class="mic-wrapper">
+        <button id="recordBtn" class="mic-btn">🎤</button>
+    </div>
+
+    <!-- STATUS -->
+    <p id="status">Tap and speak</p>
+
+    <!-- RESULT -->
+    <h2 id="result"></h2>
+
+    <!-- ERROR -->
+    <p id="errorMsg" class="error"></p>
+
+    <!-- SUGGESTIONS -->
+    <div class="suggestions">
+        <p class="suggest-title">Try saying</p>
+        <div class="chips">
+            <span class="chip">Light on</span>
+            <span class="chip">Light off</span>
+            <span class="chip">Fan on</span>
+            <span class="chip">Fan off</span>
+            <span class="chip">Call help</span>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+let isRunning = false;
+
+// 🔊 SPEAK
+function speak(text) {
+    return new Promise(resolve => {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.rate = 0.85;
+        msg.pitch = 1.05;
+        msg.onend = resolve;
+        speechSynthesis.speak(msg);
+    });
+}
+
+// 🔔 BEEP
+function beep() {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.frequency.setValueAtTime(750, ctx.currentTime);
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    setTimeout(() => {
+        osc.stop();
+        ctx.close();
+    }, 300);
+}
+
+// 🎤 RECORD
+async function recordAudio(duration = 3000) {
+
+    console.log("🎤 Recording started");
+
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+    const recorder = new MediaRecorder(stream);
+    let chunks = [];
+
+    recorder.ondataavailable = e => {
+        if (e.data.size > 0) chunks.push(e.data);
+    };
+
+    recorder.start();
+
+    return new Promise(resolve => {
+        setTimeout(() => {
+            recorder.stop();
+
+            recorder.onstop = () => {
+                console.log("🛑 Recording stopped");
+                const blob = new Blob(chunks, { type: "audio/webm" });
+                stream.getTracks().forEach(t => t.stop());
+                resolve(blob);
+            };
+        }, duration);
+    });
+}
+
+// 📡 SEND
+async function sendAudio(blob) {
+    const formData = new FormData();
+    formData.append("audio", blob, "audio.webm");
+
+    const res = await fetch("/predict", {
+        method: "POST",
+        body: formData
+    });
+
+    return await res.json();
+}
+
+// 🔁 MAIN FLOW
+async function startFlow() {
+
+    const status = document.getElementById("status");
+    const result = document.getElementById("result");
+    const mic = document.getElementById("micContainer");
+
+    result.innerText = "";
+
+    status.innerText = "Preparing...";
+    await speak("Please speak after the beep");
+
+    await new Promise(r => setTimeout(r, 500));
+    beep();
+
+    status.innerText = "🎤 Listening...";
+    mic.classList.add("listening");
+
+    const audio = await recordAudio(5000);
+
+    mic.classList.remove("listening");
+    status.innerText = "Understanding 🤔";
+
+    let data;
+
+    try {
+        data = await sendAudio(audio);
+    } catch {
+        await speak("Something went wrong");
+        status.innerText = "❌ Error";
+        return;
+    }
+
+    if (!data.command) {
+        await speak("I didn't hear anything, let's try again ");
+        status.innerText = "No speech detected, let's try again 😃";
+        return;
+    }
+
+    const command = data.command ? data.command.toLowerCase() : "";
+    if (command === "") {
+    await speak("I didn't hear anything, let's try again");
+    status.innerText = "No speech detected, let's try again 😃";
+    return;
+}
+    // 🚫 BLOCK yes/no in FIRST stage
+    if (command === "yes" || command === "no") {
+        await speak("Please say a command like light on or fan off");
+        status.innerText = "Okay, let's try again 😃";
+        return;
+    }
+    
+    result.innerText = "Command: " + command;
+
+    await speak("Did you mean " + command.replace("_"," ") + "?");
+    // add this
+    await new Promise(r => setTimeout(r, 300));
+
+    status.innerText = "🎤 Confirming...";
+
+    const confirmAudio = await recordAudio(5000);
+    const confirm = await sendAudio(confirmAudio);
+
+    const response = confirm.command ? confirm.command.toLowerCase() : "";
+    
+    if (response.includes("yes")) {
+    await speak("Executing " + command);
+    status.innerText = "✅ Done";
+
+} else if (response.includes("no")) {
+    await speak("Okay, let's try again");
+    status.innerText = "❌ Cancelled";
+    return;
+} else {
+    await speak("Okay, let's try again");
+    status.innerText = "Okay, let's try again 😃";
+    return;
+}
+}
+
+
+// 🔥 BUTTON FIXED
+document.addEventListener("DOMContentLoaded", () => {
+
+    const btn = document.getElementById("recordBtn");
+
+    btn.onclick = async () => {
+
+        console.log("CLICK WORKING");
+
+        if (isRunning) return;
+
+        try {
+            const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+            s.getTracks().forEach(t => t.stop());
+        } catch {
+            alert("Allow microphone access");
+            return;
+        }
+
+        isRunning = true;
+
+        startFlow().finally(() => {
+            isRunning = false;
+        });
+    };
+
+});
+
+</script>
+
+</body>
+</html>
